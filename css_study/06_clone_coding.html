@@ -156,7 +156,6 @@
       #tour-dates-box {
         width: 768px;
         height: 718px;
-        background-color: darkslategray;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -185,13 +184,78 @@
         padding: 8px 16px;
         color: #757575;
         list-style-type: none;
+        line-height: 24px;
+        box-sizing: border-box;
+      }
+
+      .dates-item:nth-child(1),
+      .dates-item:nth-child(2) {
+        border-bottom: 1px solid #dbdbdb;
+        box-sizing: border-box;
+      }
+
+      .dates-item:nth-child(1) > span,
+      .dates-item:nth-child(2) > span {
+        margin-left: 5px;
+        background-color: orangered;
+        color: white;
+        font-size: 14px;
+        padding: 3px 4px;
+      }
+
+      .dates-item:nth-child(3) > span {
+        background-color: black;
+        color: white;
+        border: 1px solid black;
+        box-sizing: border-box;
+        border-radius: 50px;
+        padding-right: 8px;
+        padding-left: 8px;
+      }
+
+      .dates-item:nth-child(3) {
+        display: flex;
+        justify-content: space-between;
       }
 
       #ticket-card-box {
         width: 768px;
-        height: 480px;
+        margin-top: 10px;
         background-color: antiquewhite;
+        display: flex;
+        justify-content: space-between;
       }
+
+      .card {
+        width: 245px;
+        height: 380px;
+        background-color: #757575;
+      }
+
+      .card-img-box {
+        width: 100%;
+        height: 180px;
+        background-color: aquamarine;
+      }
+
+      .card-text-box {
+        width: 100%;
+        height: 200px;
+        background-color: cadetblue;
+      }
+
+      .card-img-box > img {
+        width: 100%;
+        object-fit: contain;
+      }
+      /* 
+      contain : 가로 세로 비율 맞게 들어가는 대신
+      여백이 생김
+      cover : 가로 세로 비율 맞게 들어가는데 여백을
+      확대해서 채움
+      fill : 지정된 가로 세로 크기대로 들어가요 대신
+      비율 다 깨져서 들어감
+       */
     </style>
   </head>
   <body>
@@ -276,11 +340,51 @@
           <h2>TOUR DATES</h2>
           <p><em>Remember to book your tickets!</em></p>
           <ul id="dates-box">
-            <li class="dates-item">September</li>
-            <li class="dates-item">October</li>
-            <li class="dates-item">November</li>
+            <li class="dates-item">September <span>Sold Out</span></li>
+            <li class="dates-item">October <span>Sold Out</span></li>
+            <li class="dates-item">November <span>3</span></li>
           </ul>
-          <div id="ticket-card-box"></div>
+          <div id="ticket-card-box">
+            <div class="card">
+              <div class="card-img-box">
+                <img
+                  src="https://www.w3schools.com/w3images/newyork.jpg"
+                  alt=""
+                />
+              </div>
+              <div class="card-text-box">
+                <h3>New York</h3>
+                <p>Fri 27 Nov 2016</p>
+                <p>Praesent tincidunt sed tellus ut rutrum sed vitae justo.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-img-box">
+                <img
+                  src="https://www.w3schools.com/w3images/paris.jpg"
+                  alt=""
+                />
+              </div>
+              <div class="card-text-box">
+                <h3>Paris</h3>
+                <p>Sat 28 Nov 2016</p>
+                <p>Praesent tincidunt sed tellus ut rutrum sed vitae justo.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-img-box">
+                <img
+                  src="https://www.w3schools.com/w3images/sanfran.jpg"
+                  alt=""
+                />
+              </div>
+              <div class="card-text-box">
+                <h3>San Francisco</h3>
+                <p>Sun 29 Nov 2016</p>
+                <p>Praesent tincidunt sed tellus ut rutrum sed vitae justo.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
