@@ -46,6 +46,7 @@ rem
 .input-area {
 	display: flex;
 	gap: 10px;
+	margin-bottom: 25px;
 }
 
 #todoInput {
@@ -79,9 +80,54 @@ rem
 }
 
 #addTodoBtn:active {
-    transform: translateY(0);
+	transform: translateY(0);
 }
 
 ::placeholder {
 	color: #bbb;
+}
+
+#todoList {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+#todoList > li {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #f9f9f9;
+	border: 1px solid #eee;
+	border-radius: 5px;
+	padding: 12px 15px;
+	margin-bottom: 10px;
+	font-size: 1em;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.todo-actions > button {
+	padding: 8px 12px;
+	border: none;
+	border-radius: 4px;
+	font-size: 0.85em;
+	cursor: pointer;
+	color: white;
+	transition: background-color 0.2s ease;
+}
+
+.edit-btn {
+	background-color: #ff9800;
+}
+
+.delete-btn {
+	background-color: #f44336;
+}
+
+.edit-btn:hover {
+	background-color: #fb8c00;
+}
+
+.delete-btn:hover {
+	background-color: #d32f2f;
 }
