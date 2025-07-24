@@ -77,6 +77,29 @@ function editTodo(id) {
 			: { ...todo, isEditing: false }
 	);
 	renderTodo();
+
+	const editInput = todoList.querySelector(`li[data-id="${id}"] .edit-input`);
+	if (editInput) {
+		editInput.focus();
+		editInput.select();
+	}
+}
+
+function saveTodo(id, newText) {
+	if (newText.trim() === "") {
+		alert("수정할 내용을 입력해주세요.");
+		return;
+	}
+	todos = todos.map((todo) =>
+		todo.id === id
+			? { ...todo, text: newText.trim(), isEditing: false }
+			: todo
+	);
+	renderTodo();
+}
+
+function cancelTodo() {
+	
 }
 
 addTodoBtn.addEventListener("click", addTodo);
@@ -100,5 +123,8 @@ todoList.addEventListener("click", (event) => {
 		deleteTodo(todoId);
 	} else if (target.classList.contains("edit-btn")) {
 		editTodo(todoId);
+	} else if (target.classList.contains("save-btn")) {
+		const editInput = listItem.querySelector(".edit-input");
+		saveTodo(todoId, editInput.value);
 	}
 });
