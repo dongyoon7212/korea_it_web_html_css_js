@@ -98,8 +98,11 @@ function saveTodo(id, newText) {
 	renderTodo();
 }
 
-function cancelTodo() {
-	
+function cancelTodo(id) {
+	todos = todos.map((todo) =>
+		todo.id === id ? { ...todo, isEditing: false } : todo
+	);
+	renderTodo();
 }
 
 addTodoBtn.addEventListener("click", addTodo);
@@ -126,5 +129,7 @@ todoList.addEventListener("click", (event) => {
 	} else if (target.classList.contains("save-btn")) {
 		const editInput = listItem.querySelector(".edit-input");
 		saveTodo(todoId, editInput.value);
+	} else if (target.classList.contains("cancel-btn")) {
+		cancelTodo(todoId);
 	}
 });
