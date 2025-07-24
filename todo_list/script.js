@@ -70,6 +70,15 @@ function deleteTodo(id) {
 	}
 }
 
+function editTodo(id) {
+	todos = todos.map((todo) =>
+		todo.id === id
+			? { ...todo, isEditing: true }
+			: { ...todo, isEditing: false }
+	);
+	renderTodo();
+}
+
 addTodoBtn.addEventListener("click", addTodo);
 
 todoInput.addEventListener("keypress", (event) => {
@@ -89,5 +98,7 @@ todoList.addEventListener("click", (event) => {
 
 	if (target.classList.contains("delete-btn")) {
 		deleteTodo(todoId);
+	} else if (target.classList.contains("edit-btn")) {
+		editTodo(todoId);
 	}
 });
