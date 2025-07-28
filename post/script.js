@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://jsonplaceholder.typicode.com/";
+const API_BASE_URL = "https://jsonplaceholder.typicode.com";
 
 //게시물 목록 컨테이너
 const postListContainer = document.querySelector("#postListContainer");
@@ -18,6 +18,15 @@ const detailBody = document.querySelector("#detailBody");
 //목록으로 돌아가기 버튼
 const backBtn = document.querySelector("#backBtn");
 
+//목록 - 상세 전환 함수
+function changeContainer(containerId) {
+	const containers = document.querySelectorAll(".page-container");
+	containers.forEach((container) => {
+		container.classList.remove("active");
+	});
+	document.querySelector(`#${containerId}`).classList.add("active");
+}
+
 //게시물 목록 불러와서 렌더링하는 함수
 async function fetchPosts() {
 	try {
@@ -35,8 +44,8 @@ async function fetchPosts() {
 			posts.forEach((post) => {
 				postList.innerHTML += `
                 <li>
-                    <span class="post-title">${post.title}</span>
-                    <button class="detail-btn">상세보기</button>
+                    <span class="post-title" data-post-id="${post.id}">${post.title}</span>
+                    <button class="detail-btn" data-post-id="${post.id}">상세보기</button>
                 </li>
                 `;
 			});
@@ -50,6 +59,31 @@ async function fetchPosts() {
 	}
 }
 
+async function fetchPostDetail(postId) {
+	changeContainer("postDetailContainer"); //상세 컨테이너 나타남
+	detailTitle.textContent = "제목 불러오는 중...";
+	detailId.textContent = "";
+	detailUserId.textContent = "";
+	detailBody.textContent = "내용 불러오는 중...";
+
+	try {
+		const response = await fetch(`${API_BASE_URL}/posts/${postId}`);
+
+		if (!response.ok) {
+			throw new Error("문제 발생!");
+		}
+
+		const post = await response.json();
+		detailTitle.textContent = post.title;
+		detailId.textContent = post.id;
+		detailUserId.textContent = post.userId;
+		detailBody.textContent = post.body;
+	} catch (error) {
+		alert("게시물 상세를 불러오는데 실패했습니다.");
+		changeContainer("postListContainer"); //실패시 목록으로
+	}
+}
+
 postList.addEventListener("click", (event) => {
 	const target = event.target;
 
@@ -57,7 +91,10 @@ postList.addEventListener("click", (event) => {
 		target.classList.contains("post-title") ||
 		target.classList.contains("detail-btn")
 	) {
-		console.log("클릭됨");
+		const postId = target.dataset.postId;
+		if (postId) {
+			fetchPostDetail(postId);
+		}
 	}
 });
 
