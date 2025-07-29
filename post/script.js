@@ -98,4 +98,8 @@ postList.addEventListener("click", (event) => {
 	}
 });
 
+backBtn.addEventListener("click", () => {
+	changeContainer("postListContainer");
+});
+
 fetchPosts();
