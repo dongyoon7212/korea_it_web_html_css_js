@@ -19,7 +19,34 @@ const signinForm = document.querySelector("#signin-form");
 //게시판 목록
 const boardList = document.querySelector("#board-list");
 
+//게시물 추가
+const writeForm = document.querySelector("#write-form");
+
 let boards = [];
+
+//AccessToken 디코딩
+function getPayload() {
+	const token = localStorage.getItem("AccessToken");
+	if (!token) {
+		alert("로그인이 필요합니다.");
+		changePages(pageSignin);
+		return null;
+	}
+
+	try {
+		//토큰을 . 기준으로 분리해서 payload를 가져온다
+		const payloadBase64 = token.split(".")[1];
+		//디코딩
+		const decodedPayload = atob(payloadBase64);
+		//디코딩된 JSON 문자열을 자바스크립트 객체로 변환
+		const payload = JSON.parse(decodedPayload);
+
+		return payload;
+	} catch (error) {
+		console.log(error);
+		alert("토큰 오류 발생");
+	}
+}
 
 // 페이지 전환 함수
 function changePages(pageElement) {
@@ -61,6 +88,7 @@ async function renderBoard() {
 		} else {
 			//요청해서 받아온 게시물들 foreach => ul안에 li로 넣기
 			boards = responseData.data;
+			boardList.innerHTML = "";
 
 			boards.forEach((board) => {
 				boardList.innerHTML += `<li>${board.title}</li>`;
@@ -72,6 +100,13 @@ async function renderBoard() {
 		console.log(error);
 		alert("게시물 목록 조회 중 오류가 발생했습니다.");
 	}
+}
+
+//게시물 추가 요청 함수
+async function addBoard(event) {
+	event.preventDefault();
+	const userInfo = await getPayload();
+	console.log(userInfo);
 }
 
 //로그인 요청 함수
@@ -109,9 +144,6 @@ async function signinHandler(event) {
 			localStorage.setItem("AccessToken", responseData.data);
 			signinForm.reset();
 
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			//+++++++++++++++++++++++게시판 목록으로 전환+++++++++++++++++++++++++++++
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			await renderBoard();
 			changePages(pageBoard);
 		}
@@ -180,3 +212,4 @@ navWrite.addEventListener("click", () => {
 
 signupForm.addEventListener("submit", signupHandler);
 signinForm.addEventListener("submit", signinHandler);
+writeForm.addEventListener("submit", addBoard);
