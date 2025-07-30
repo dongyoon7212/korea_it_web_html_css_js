@@ -1,17 +1,25 @@
 const API_BASE_URL = "http://localhost:8080";
 
+//메뉴
 const navSignin = document.querySelector("#nav-signin");
 const navSignup = document.querySelector("#nav-signup");
 const navBoard = document.querySelector("#nav-board");
 const navWrite = document.querySelector("#nav-write");
 
+//페이지
 const pageSignin = document.querySelector("#page-signin");
 const pageSignup = document.querySelector("#page-signup");
 const pageBoard = document.querySelector("#page-board");
 const pageWrite = document.querySelector("#page-write");
 
+//로그인 및 회원가입 폼
 const signupForm = document.querySelector("#signup-form");
 const signinForm = document.querySelector("#signin-form");
+
+//게시판 목록
+const boardList = document.querySelector("#board-list");
+
+let boards = [];
 
 // 페이지 전환 함수
 function changePages(pageElement) {
@@ -20,6 +28,50 @@ function changePages(pageElement) {
 		page.classList.remove("active");
 	});
 	pageElement.classList.add("active");
+}
+
+//게시판 목록 조회 및 표시 함수
+//게시판 목록 버튼 눌렀을때, 로그인 되었을때
+async function renderBoard() {
+	//요청을 보내기전에 AccessToken 빼오기
+	const accessToken = localStorage.getItem("AccessToken");
+
+	//만약에 로컬 스토리지에 AccessToken이 없으면 로그인 페이지로 전환
+	if (!accessToken) {
+		changePages(pageSignin);
+		alert("로그인이 필요합니다.");
+		return;
+	}
+
+	//요청 보내기
+	try {
+		const response = await fetch(`${API_BASE_URL}/board/list`, {
+			method: "GET",
+			//fetch에서 headers안에 Authorization: `Bearer ${AccessToken}`
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
+
+		const responseData = await response.json();
+
+		if (responseData.status !== "success") {
+			alert(responseData.message);
+			//게시물 작성 페이지로 전환
+		} else {
+			//요청해서 받아온 게시물들 foreach => ul안에 li로 넣기
+			boards = responseData.data;
+
+			boards.forEach((board) => {
+				boardList.innerHTML += `<li>${board.title}</li>`;
+			});
+
+			changePages(pageBoard);
+		}
+	} catch (error) {
+		console.log(error);
+		alert("게시물 목록 조회 중 오류가 발생했습니다.");
+	}
 }
 
 //로그인 요청 함수
@@ -60,6 +112,8 @@ async function signinHandler(event) {
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//+++++++++++++++++++++++게시판 목록으로 전환+++++++++++++++++++++++++++++
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			await renderBoard();
+			changePages(pageBoard);
 		}
 	} catch (error) {
 		console.log(error);
@@ -119,9 +173,7 @@ navSignin.addEventListener("click", () => {
 navSignup.addEventListener("click", () => {
 	changePages(pageSignup);
 });
-navBoard.addEventListener("click", () => {
-	changePages(pageBoard);
-});
+navBoard.addEventListener("click", renderBoard);
 navWrite.addEventListener("click", () => {
 	changePages(pageWrite);
 });
