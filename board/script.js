@@ -11,6 +11,7 @@ const pageBoard = document.querySelector("#page-board");
 const pageWrite = document.querySelector("#page-write");
 
 const signupForm = document.querySelector("#signup-form");
+const signinForm = document.querySelector("#signin-form");
 
 // 페이지 전환 함수
 function changePages(pageElement) {
@@ -19,6 +20,51 @@ function changePages(pageElement) {
 		page.classList.remove("active");
 	});
 	pageElement.classList.add("active");
+}
+
+//로그인 요청 함수
+async function signinHandler(event) {
+	event.preventDefault();
+
+	const usernameInput = document.querySelector("#signin-id");
+	const passwordInput = document.querySelector("#signin-password");
+
+	const signinData = {
+		username: usernameInput.value,
+		password: passwordInput.value,
+	};
+
+	if (!signinData.username || !signinData.password) {
+		alert("아이디 또는 비밀번호를 모두 입력해 주세요.");
+		return;
+	}
+
+	try {
+		const response = await fetch(`${API_BASE_URL}/auth/signin`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(signinData),
+		});
+
+		const responseData = await response.json();
+
+		if (responseData.status !== "success") {
+			alert(responseData.message);
+		} else {
+			alert(responseData.message);
+			localStorage.setItem("AccessToken", responseData.data);
+			signinForm.reset();
+
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//+++++++++++++++++++++++게시판 목록으로 전환+++++++++++++++++++++++++++++
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		}
+	} catch (error) {
+		console.log(error);
+		alert("서버와 통신 중 오류가 발생했습니다.");
+	}
 }
 
 //회원가입 요청 함수
@@ -81,3 +127,4 @@ navWrite.addEventListener("click", () => {
 });
 
 signupForm.addEventListener("submit", signupHandler);
+signinForm.addEventListener("submit", signinHandler);
