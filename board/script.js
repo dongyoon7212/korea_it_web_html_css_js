@@ -91,7 +91,14 @@ async function renderBoard() {
 			boardList.innerHTML = "";
 
 			boards.forEach((board) => {
-				boardList.innerHTML += `<li>${board.title}</li>`;
+				const listItem = document.createElement("li");
+				listItem.innerText = board.title;
+
+				listItem.addEventListener("click", () => {
+					console.log(board.boardId);
+				});
+
+				boardList.appendChild(listItem);
 			});
 
 			changePages(pageBoard);
