@@ -11,6 +11,7 @@ const pageSignin = document.querySelector("#page-signin");
 const pageSignup = document.querySelector("#page-signup");
 const pageBoard = document.querySelector("#page-board");
 const pageWrite = document.querySelector("#page-write");
+const pageDetail = document.querySelector("#page-detail");
 
 //로그인 및 회원가입 폼
 const signupForm = document.querySelector("#signup-form");
@@ -21,6 +22,12 @@ const boardList = document.querySelector("#board-list");
 
 //게시물 추가
 const writeForm = document.querySelector("#write-form");
+
+//게시물 상세
+const detailTitle = document.querySelector("#detail-title");
+const detailUserId = document.querySelector("#detail-userid");
+const detailContent = document.querySelector("#detail-content");
+const backBtn = document.querySelector("#back-btn");
 
 let boards = [];
 
@@ -95,7 +102,7 @@ async function renderBoard() {
 				listItem.innerText = board.title;
 
 				listItem.addEventListener("click", () => {
-					console.log(board.boardId);
+					getBoard(board.boardId);
 				});
 
 				boardList.appendChild(listItem);
@@ -107,6 +114,35 @@ async function renderBoard() {
 		console.log(error);
 		alert("게시물 목록 조회 중 오류가 발생했습니다.");
 	}
+}
+
+//게시물 단건 조회 요청 함수
+async function getBoard(boardId) {
+	const accessToken = localStorage.getItem("AccessToken");
+
+	if (!accessToken) {
+		alert("게시물을 조하려면 로그인이 필요합니다.");
+		changePages(pageSignin);
+		return;
+	}
+
+	try {
+		const response = await fetch(`${API_BASE_URL}/board/${boardId}`, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
+
+		const responseData = await response.json();
+
+		if (responseData.status === "success") {
+			detailTitle.innerText = responseData.data.title;
+			detailUserId.innerText = responseData.data.userId;
+			detailContent.innerText = responseData.data.content;
+			changePages(pageDetail);
+		}
+	} catch (error) {}
 }
 
 //게시물 추가 요청 함수
@@ -269,6 +305,8 @@ navBoard.addEventListener("click", renderBoard);
 navWrite.addEventListener("click", () => {
 	changePages(pageWrite);
 });
+
+backBtn.addEventListener("click", renderBoard);
 
 signupForm.addEventListener("submit", signupHandler);
 signinForm.addEventListener("submit", signinHandler);
