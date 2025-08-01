@@ -138,7 +138,7 @@ async function getBoard(boardId) {
 
 		if (responseData.status === "success") {
 			detailTitle.innerText = responseData.data.title;
-			detailUserId.innerText = responseData.data.userId;
+			detailUserId.innerText = `유저 ID : ${responseData.data.userId}`;
 			detailContent.innerText = responseData.data.content;
 			changePages(pageDetail);
 		}
@@ -311,3 +311,14 @@ backBtn.addEventListener("click", renderBoard);
 signupForm.addEventListener("submit", signupHandler);
 signinForm.addEventListener("submit", signinHandler);
 writeForm.addEventListener("submit", addBoard);
+
+//HTML 문서가 완전히 로드되고 파싱되었을때
+document.addEventListener("DOMContentLoaded", async () => {
+	const accessToken = localStorage.getItem("AccessToken");
+
+	if (accessToken) {
+		await renderBoard();
+	} else {
+		changePages(pageSignin);
+	}
+});
