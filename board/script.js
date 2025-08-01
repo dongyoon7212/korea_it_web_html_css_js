@@ -3,8 +3,10 @@ const API_BASE_URL = "http://localhost:8080";
 //메뉴
 const navSignin = document.querySelector("#nav-signin");
 const navSignup = document.querySelector("#nav-signup");
+const navLogout = document.querySelector("#nav-logout");
 const navBoard = document.querySelector("#nav-board");
 const navWrite = document.querySelector("#nav-write");
+// console.dir(navSignin);
 
 //페이지
 const pageSignin = document.querySelector("#page-signin");
@@ -240,8 +242,7 @@ async function signinHandler(event) {
 			localStorage.setItem("AccessToken", responseData.data);
 			signinForm.reset();
 
-			await renderBoard();
-			changePages(pageBoard);
+			location.reload();
 		}
 	} catch (error) {
 		console.log(error);
@@ -301,6 +302,14 @@ navSignin.addEventListener("click", () => {
 navSignup.addEventListener("click", () => {
 	changePages(pageSignup);
 });
+navLogout.addEventListener("click", () => {
+	if (confirm("정말 로그아웃 하시겠습니까?")) {
+		localStorage.removeItem("AccessToken");
+		location.reload(true);
+	} else {
+		return;
+	}
+});
 navBoard.addEventListener("click", renderBoard);
 navWrite.addEventListener("click", () => {
 	changePages(pageWrite);
@@ -317,8 +326,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const accessToken = localStorage.getItem("AccessToken");
 
 	if (accessToken) {
+		navSignin.style.display = "none";
+		navSignup.style.display = "none";
 		await renderBoard();
 	} else {
+		navLogout.style.display = "none";
 		changePages(pageSignin);
 	}
 });
