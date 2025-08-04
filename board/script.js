@@ -33,6 +33,7 @@ const detailTitle = document.querySelector("#detail-title");
 const detailUserId = document.querySelector("#detail-userid");
 const detailContent = document.querySelector("#detail-content");
 const backBtn = document.querySelector("#back-btn");
+const deleteBtn = document.querySelector("#delete-btn");
 
 let boards = [];
 
@@ -147,9 +148,14 @@ async function getBoard(boardId) {
 			detailTitle.innerText = responseData.data.title;
 			detailUserId.innerText = `유저 ID : ${responseData.data.userId}`;
 			detailContent.innerText = responseData.data.content;
+			deleteBtn.setAttribute("data-board-id", responseData.data.boardId);
 			changePages(pageDetail);
 		}
 	} catch (error) {}
+}
+
+async function removeBoard() {
+	console.dir(deleteBtn.dataset.boardId);
 }
 
 //게시물 추가 요청 함수
@@ -387,6 +393,7 @@ navWrite.addEventListener("click", () => {
 });
 
 backBtn.addEventListener("click", renderBoard);
+deleteBtn.addEventListener("click", removeBoard);
 
 signupForm.addEventListener("submit", signupHandler);
 signinForm.addEventListener("submit", signinHandler);
