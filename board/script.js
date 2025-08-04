@@ -34,6 +34,7 @@ const detailUserId = document.querySelector("#detail-userid");
 const detailContent = document.querySelector("#detail-content");
 const backBtn = document.querySelector("#back-btn");
 const deleteBtn = document.querySelector("#delete-btn");
+const btnBox = document.querySelector("#btn-box");
 
 let boards = [];
 
@@ -128,6 +129,9 @@ async function renderBoard() {
 async function getBoard(boardId) {
 	const accessToken = localStorage.getItem("AccessToken");
 
+	const userInfo = getPayload(accessToken);
+	const userId = parseInt(userInfo.jti);
+
 	if (!accessToken) {
 		alert("게시물을 조하려면 로그인이 필요합니다.");
 		changePages(pageSignin);
@@ -149,13 +153,52 @@ async function getBoard(boardId) {
 			detailUserId.innerText = `유저 ID : ${responseData.data.userId}`;
 			detailContent.innerText = responseData.data.content;
 			deleteBtn.setAttribute("data-board-id", responseData.data.boardId);
+
+			btnBox.classList.remove("active");
+			if (responseData.data.userId == userId) {
+				btnBox.classList.add("active");
+			}
 			changePages(pageDetail);
 		}
 	} catch (error) {}
 }
 
 async function removeBoard() {
-	console.dir(deleteBtn.dataset.boardId);
+	const boardId = deleteBtn.dataset.boardId;
+
+	const accessToken = localStorage.getItem("AccessToken");
+
+	if (!accessToken) {
+		alert("로그인이 필요합니다.");
+		changePages(pageSignin);
+		return;
+	}
+
+	try {
+		const response = await fetch(
+			`${API_BASE_URL}/board/remove/${boardId}`,
+			{
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
+
+		const responseData = await response.json();
+
+		if (responseData.status !== "success") {
+			alert(responseData.message);
+		} else {
+			alert(responseData.message);
+		}
+
+		await renderBoard();
+		changePages(pageBoard);
+	} catch (error) {
+		console.log(error);
+		alert("삭제 요청을 보내는 중에 문제가 발생했습니다.");
+	}
 }
 
 //게시물 추가 요청 함수

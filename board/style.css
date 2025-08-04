@@ -64,10 +64,6 @@ main {
 	box-sizing: border-box;
 }
 
-.active {
-	display: flex;
-}
-
 h2 {
 	color: #333333;
 }
@@ -172,6 +168,11 @@ p {
 	justify-content: space-between;
 }
 
+#btn-box {
+	display: none;
+	gap: 5px;
+}
+
 .commonBtn {
 	border: none;
 	padding: 7px 15px;
@@ -196,4 +197,8 @@ p {
 
 .commonBtn:nth-of-type(2):hover {
 	background-color: #0042ad;
+}
+
+.active {
+	display: flex !important;
 }
